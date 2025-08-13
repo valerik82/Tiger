@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tiger Treasures - Jewel Puzzle Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">🐅 Tiger Treasures</h1>
+            <div class="score-container">
+                <div class="score-item">
+                    <span class="label">Score:</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="score-item">
+                    <span class="label">Level:</span>
+                    <span id="level" class="value">1</span>
+                </div>
+                <div class="score-item">
+                    <span class="label">Moves:</span>
+                    <span id="moves" class="value">30</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-main">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <span id="target-score" class="target-score">Target: 1000</span>
+            </div>
+
+            <div id="game-board" class="game-board">
+                <!-- Game grid will be generated here -->
+            </div>
+
+            <div class="game-controls">
+                <button id="shuffle-btn" class="control-btn">
+                    🔄 Shuffle
+                </button>
+                <button id="hint-btn" class="control-btn">
+                    💡 Hint
+                </button>
+                <button id="pause-btn" class="control-btn">
+                    ⏸️ Pause
+                </button>
+            </div>
+        </main>
+
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="game-over-title">Level Complete!</h2>
+                <p id="game-over-message">Congratulations! You've completed the level.</p>
+                <div class="modal-score">
+                    <span>Final Score: <span id="final-score">0</span></span>
+                </div>
+                <div class="modal-buttons">
+                    <button id="next-level-btn" class="modal-btn primary">Next Level</button>
+                    <button id="restart-btn" class="modal-btn secondary">Restart</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pause-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Game Paused</h2>
+                <div class="modal-buttons">
+                    <button id="resume-btn" class="modal-btn primary">Resume</button>
+                    <button id="restart-game-btn" class="modal-btn secondary">Restart Game</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading-screen hidden" id="loading-screen">
+            <div class="loading-content">
+                <div class="tiger-emoji">🐅</div>
+                <h2>Loading Tiger Treasures...</h2>
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
