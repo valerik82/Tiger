@@ -1,0 +1,697 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    background-size: 400% 400%;
+    animation: chineseGradient 8s ease infinite;
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+@keyframes chineseGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Game Container */
+.game-container {
+    max-width: 414px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+/* Header */
+.game-header {
+    padding: 15px 20px;
+    background: linear-gradient(90deg, #8b0000, #dc143c, #b8860b);
+    color: #ffd700;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.3);
+    border-bottom: 2px solid #ffd700;
+}
+
+.fortune-tiger-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tiger-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00);
+    border: 3px solid #8b0000;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 69, 0, 0.3);
+    animation: tigerPulse 2s ease-in-out infinite alternate;
+}
+
+.tiger-image::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.8);
+}
+
+.tiger-image::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    animation: tigerRing 3s linear infinite;
+}
+
+@keyframes tigerPulse {
+    0% { 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 69, 0, 0.3);
+        transform: scale(1);
+    }
+    100% { 
+        box-shadow: 0 0 25px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 69, 0, 0.6);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes tigerRing {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { transform: rotate(360deg); opacity: 1; }
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.fortune-tiger-logo .game-title {
+    margin-bottom: 0;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.score-item .label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+.score-item .value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 1px 1px 2px rgba(139, 0, 0, 0.8);
+}
+
+/* Main Game Area */
+.game-main {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Progress Bar */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid #2c1810;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.target-score {
+    font-size: 12px;
+    font-weight: bold;
+    color: #8b0000;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 255, 255, 0.8));
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: 1px solid #ffd700;
+    white-space: nowrap;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Game Board */
+.game-board {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    aspect-ratio: 1;
+    background: linear-gradient(45deg, rgba(139, 0, 0, 0.1), rgba(255, 215, 0, 0.1));
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2);
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 2px;
+    border: 4px solid #ffd700;
+    position: relative;
+}
+
+.game-board::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    border-radius: 19px;
+    z-index: -1;
+    animation: borderRotate 4s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.board-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.tiger-image-small {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00);
+    border: 2px solid #8b0000;
+    position: relative;
+    animation: tigerPulse 3s ease-in-out infinite alternate;
+}
+
+.tiger-image-small::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.8);
+}
+
+.gem {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.gem:active {
+    transform: scale(0.95);
+}
+
+.gem.selected {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.9), 0 0 25px rgba(220, 20, 60, 0.6);
+    transform: scale(1.1);
+}
+
+.gem.highlighted {
+    animation: pulse 0.5s infinite alternate;
+}
+
+/* Gem Types - Chinese Fortune Tiger Style */
+.gem.tiger { 
+    background: linear-gradient(135deg, #d4af37, #ffd700, #ff4500);
+    border: 2px solid #8b0000;
+    box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.7), 0 0 15px rgba(212, 175, 55, 0.5), 0 0 25px rgba(255, 215, 0, 0.3);
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+    animation: fortuneGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes fortuneGlow {
+    0% { 
+        box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.7), 0 0 15px rgba(212, 175, 55, 0.5), 0 0 25px rgba(255, 215, 0, 0.3);
+    }
+    100% { 
+        box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.9), 0 0 20px rgba(212, 175, 55, 0.8), 0 0 35px rgba(255, 215, 0, 0.6);
+    }
+}
+
+.gem.tiger::before {
+    content: '福';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #8b0000;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.8);
+    font-weight: bold;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.gem.tiger::after {
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    border: 1px solid rgba(255, 215, 0, 0.6);
+    border-radius: 8px;
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.gem.ruby { 
+    background: linear-gradient(135deg, #dc143c, #b22222, #8b0000);
+    border: 1px solid #660000;
+}
+.gem.emerald { 
+    background: linear-gradient(135deg, #228b22, #32cd32, #00ff00);
+    border: 1px solid #006400;
+}
+.gem.sapphire { 
+    background: linear-gradient(135deg, #0000cd, #4169e1, #1e90ff);
+    border: 1px solid #000080;
+}
+.gem.diamond { 
+    background: linear-gradient(135deg, #f8f8ff, #e6e6fa, #dcdcdc);
+    border: 1px solid #c0c0c0;
+}
+.gem.topaz { 
+    background: linear-gradient(135deg, #daa520, #ffd700, #ffff00);
+    border: 1px solid #b8860b;
+}
+.gem.amethyst { 
+    background: linear-gradient(135deg, #8a2be2, #9370db, #ba55d3);
+    border: 1px solid #4b0082;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 0 10px;
+}
+
+.control-btn {
+    flex: 1;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #ffd700;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.control-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    max-width: 300px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2 {
+    color: #8b0000;
+    margin-bottom: 15px;
+    font-size: 24px;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.6);
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.modal-score {
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ffd700;
+    margin: 15px 0;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 1px 0 rgba(255, 215, 0, 0.3);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.modal-btn {
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-btn.primary {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.modal-btn.secondary {
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.modal-btn:active {
+    transform: translateY(1px);
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    background-size: 400% 400%;
+    animation: chineseGradient 3s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.loading-screen.hidden {
+    display: none;
+}
+
+.loading-content {
+    text-align: center;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.8);
+}
+
+.fortune-tiger-loading {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.tiger-image-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00, #dc143c);
+    border: 5px solid #8b0000;
+    position: relative;
+    margin: 0 auto 10px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 69, 0, 0.4);
+    animation: tigerPulse 2s ease-in-out infinite alternate, tigerRotate 8s linear infinite;
+}
+
+.tiger-image-large::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.8);
+}
+
+.tiger-image-large::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 215, 0, 0.6);
+    animation: tigerRing 4s linear infinite reverse;
+}
+
+@keyframes tigerRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.tiger-emoji {
+    font-size: 40px;
+    margin-top: 10px;
+    animation: bounce 1s infinite;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.loading-content h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+    from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 15px rgba(220, 20, 60, 0.3); }
+    to { box-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 30px rgba(220, 20, 60, 0.7); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.gem.falling {
+    animation: slideDown 0.3s ease;
+}
+
+.gem.matching {
+    animation: fadeOut 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 375px) {
+    .game-header {
+        padding: 10px 15px;
+    }
+    
+    .game-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .score-item .value {
+        font-size: 16px;
+    }
+    
+    .game-main {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .gem {
+        font-size: 14px;
+    }
+    
+    .control-btn {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 700px) {
+    .game-header {
+        padding: 10px 20px;
+    }
+    
+    .game-title {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+    
+    .game-main {
+        gap: 8px;
+    }
+}
+
+/* Touch optimization */
+@media (hover: none) and (pointer: coarse) {
+    .gem:hover {
+        transform: none;
+    }
+    
+    .control-btn:hover {
+        background: linear-gradient(135deg, #8b0000, #dc143c);
+    }
+}
+
+.control-btn:hover {
+    background: linear-gradient(135deg, #dc143c, #8b0000);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.4);
+}
+
+/* Landscape orientation adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    .game-container {
+        flex-direction: row;
+        max-width: 100%;
+    }
+    
+    .game-header {
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        width: 120px;
+        flex-shrink: 0;
+    }
+    
+    .game-main {
+        flex: 1;
+        padding: 15px;
+    }
+    
+    .game-board {
+        max-width: 300px;
+        max-height: 300px;
+    }
+}
