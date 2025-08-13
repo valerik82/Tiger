@@ -7,12 +7,20 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc02);
+    background: linear-gradient(135deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    background-size: 400% 400%;
+    animation: chineseGradient 8s ease infinite;
     min-height: 100vh;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
+}
+
+@keyframes chineseGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Game Container */
@@ -30,9 +38,10 @@ body {
 /* Header */
 .game-header {
     padding: 15px 20px;
-    background: linear-gradient(90deg, #2c1810, #4a2c1a);
-    color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(90deg, #8b0000, #dc143c, #b8860b);
+    color: #ffd700;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.3);
+    border-bottom: 2px solid #ffd700;
 }
 
 .game-title {
@@ -65,7 +74,8 @@ body {
 .score-item .value {
     font-size: 18px;
     font-weight: bold;
-    color: #ffcc02;
+    color: #ffd700;
+    text-shadow: 1px 1px 2px rgba(139, 0, 0, 0.8);
 }
 
 /* Main Game Area */
@@ -103,11 +113,13 @@ body {
 .target-score {
     font-size: 12px;
     font-weight: bold;
-    color: #2c1810;
-    background: rgba(255, 255, 255, 0.8);
+    color: #8b0000;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 255, 255, 0.8));
     padding: 4px 8px;
     border-radius: 12px;
+    border: 1px solid #ffd700;
     white-space: nowrap;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 /* Game Board */
@@ -116,15 +128,34 @@ body {
     max-width: 350px;
     margin: 0 auto;
     aspect-ratio: 1;
-    background: rgba(255, 255, 255, 0.9);
+    background: linear-gradient(45deg, rgba(139, 0, 0, 0.1), rgba(255, 215, 0, 0.1));
     border-radius: 15px;
     padding: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2);
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 2px;
-    border: 3px solid #2c1810;
+    border: 4px solid #ffd700;
+    position: relative;
+}
+
+.game-board::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    border-radius: 19px;
+    z-index: -1;
+    animation: borderRotate 4s linear infinite;
+}
+
+@keyframes borderRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .gem {
@@ -147,8 +178,8 @@ body {
 }
 
 .gem.selected {
-    border-color: #ff6b35;
-    box-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.9), 0 0 25px rgba(220, 20, 60, 0.6);
     transform: scale(1.1);
 }
 
@@ -156,14 +187,62 @@ body {
     animation: pulse 0.5s infinite alternate;
 }
 
-/* Gem Types */
-.gem.tiger { background: linear-gradient(135deg, #ff6b35, #f7931e); }
-.gem.ruby { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-.gem.emerald { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-.gem.sapphire { background: linear-gradient(135deg, #3498db, #2980b9); }
-.gem.diamond { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); }
-.gem.topaz { background: linear-gradient(135deg, #f39c12, #e67e22); }
-.gem.amethyst { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+/* Gem Types - Chinese Fortune Tiger Style */
+.gem.tiger { 
+    background: linear-gradient(135deg, #d4af37, #ffd700, #ff4500);
+    border: 2px solid #8b0000;
+    box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.7), 0 0 15px rgba(212, 175, 55, 0.5);
+    position: relative;
+}
+
+.gem.tiger::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.gem.tiger::after {
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    border: 1px solid rgba(255, 215, 0, 0.6);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.gem.ruby { 
+    background: linear-gradient(135deg, #dc143c, #b22222, #8b0000);
+    border: 1px solid #660000;
+}
+.gem.emerald { 
+    background: linear-gradient(135deg, #228b22, #32cd32, #00ff00);
+    border: 1px solid #006400;
+}
+.gem.sapphire { 
+    background: linear-gradient(135deg, #0000cd, #4169e1, #1e90ff);
+    border: 1px solid #000080;
+}
+.gem.diamond { 
+    background: linear-gradient(135deg, #f8f8ff, #e6e6fa, #dcdcdc);
+    border: 1px solid #c0c0c0;
+}
+.gem.topaz { 
+    background: linear-gradient(135deg, #daa520, #ffd700, #ffff00);
+    border: 1px solid #b8860b;
+}
+.gem.amethyst { 
+    background: linear-gradient(135deg, #8a2be2, #9370db, #ba55d3);
+    border: 1px solid #4b0082;
+}
 
 /* Game Controls */
 .game-controls {
@@ -178,13 +257,14 @@ body {
     padding: 12px 8px;
     font-size: 14px;
     font-weight: bold;
-    border: none;
+    border: 2px solid #ffd700;
     border-radius: 12px;
-    background: linear-gradient(135deg, #2c1810, #4a2c1a);
-    color: white;
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .control-btn:active {
@@ -227,9 +307,10 @@ body {
 }
 
 .modal-content h2 {
-    color: #2c1810;
+    color: #8b0000;
     margin-bottom: 15px;
     font-size: 24px;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.6);
 }
 
 .modal-content p {
@@ -239,13 +320,16 @@ body {
 }
 
 .modal-score {
-    background: #f39c12;
-    color: white;
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
     padding: 10px;
     border-radius: 10px;
+    border: 2px solid #ffd700;
     margin: 15px 0;
     font-weight: bold;
     font-size: 18px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 1px 0 rgba(255, 215, 0, 0.3);
 }
 
 .modal-buttons {
@@ -270,8 +354,10 @@ body {
 }
 
 .modal-btn.secondary {
-    background: linear-gradient(135deg, #ff6b35, #f7931e);
-    color: white;
+    background: linear-gradient(135deg, #8b0000, #dc143c);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .modal-btn:active {
@@ -285,7 +371,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc02);
+    background: linear-gradient(135deg, #8b0000, #dc143c, #ffd700, #ff4500);
+    background-size: 400% 400%;
+    animation: chineseGradient 3s ease infinite;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -298,7 +386,8 @@ body {
 
 .loading-content {
     text-align: center;
-    color: white;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.8);
 }
 
 .tiger-emoji {
@@ -325,8 +414,8 @@ body {
 
 /* Animations */
 @keyframes pulse {
-    from { box-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
-    to { box-shadow: 0 0 20px rgba(255, 107, 53, 1); }
+    from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 15px rgba(220, 20, 60, 0.3); }
+    to { box-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 30px rgba(220, 20, 60, 0.7); }
 }
 
 @keyframes bounce {
@@ -410,8 +499,13 @@ body {
     }
     
     .control-btn:hover {
-        background: linear-gradient(135deg, #2c1810, #4a2c1a);
+        background: linear-gradient(135deg, #8b0000, #dc143c);
     }
+}
+
+.control-btn:hover {
+    background: linear-gradient(135deg, #dc143c, #8b0000);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.4);
 }
 
 /* Landscape orientation adjustments */
