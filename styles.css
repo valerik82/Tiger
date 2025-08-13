@@ -44,12 +44,76 @@ body {
     border-bottom: 2px solid #ffd700;
 }
 
+.fortune-tiger-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tiger-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00);
+    border: 3px solid #8b0000;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 69, 0, 0.3);
+    animation: tigerPulse 2s ease-in-out infinite alternate;
+}
+
+.tiger-image::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.8);
+}
+
+.tiger-image::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    animation: tigerRing 3s linear infinite;
+}
+
+@keyframes tigerPulse {
+    0% { 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 69, 0, 0.3);
+        transform: scale(1);
+    }
+    100% { 
+        box-shadow: 0 0 25px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 69, 0, 0.6);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes tigerRing {
+    0% { transform: rotate(0deg); opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { transform: rotate(360deg); opacity: 1; }
+}
+
 .game-title {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.fortune-tiger-logo .game-title {
+    margin-bottom: 0;
 }
 
 .score-container {
@@ -156,6 +220,38 @@ body {
 @keyframes borderRotate {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.board-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.tiger-image-small {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00);
+    border: 2px solid #8b0000;
+    position: relative;
+    animation: tigerPulse 3s ease-in-out infinite alternate;
+}
+
+.tiger-image-small::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.8);
 }
 
 .gem {
@@ -406,10 +502,61 @@ body {
     text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.8);
 }
 
-.tiger-emoji {
-    font-size: 80px;
+.fortune-tiger-loading {
+    position: relative;
+    display: inline-block;
     margin-bottom: 20px;
+}
+
+.tiger-image-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff4500, #ffd700, #ff8c00, #dc143c);
+    border: 5px solid #8b0000;
+    position: relative;
+    margin: 0 auto 10px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 69, 0, 0.4);
+    animation: tigerPulse 2s ease-in-out infinite alternate, tigerRotate 8s linear infinite;
+}
+
+.tiger-image-large::before {
+    content: '虎';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    font-weight: bold;
+    color: #8b0000;
+    text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.8);
+}
+
+.tiger-image-large::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 215, 0, 0.6);
+    animation: tigerRing 4s linear infinite reverse;
+}
+
+@keyframes tigerRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.tiger-emoji {
+    font-size: 40px;
+    margin-top: 10px;
     animation: bounce 1s infinite;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .loading-content h2 {

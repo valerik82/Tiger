@@ -9,7 +9,10 @@
 <body>
     <div class="game-container">
         <header class="game-header">
-            <h1 class="game-title">🪙 Fortune Tiger</h1>
+            <div class="fortune-tiger-logo">
+                <div class="tiger-image"></div>
+                <h1 class="game-title">🪙 Fortune Tiger</h1>
+            </div>
             <div class="score-container">
                 <div class="score-item">
                     <span class="label">Score:</span>
@@ -36,6 +39,9 @@
 
             <div id="game-board" class="game-board">
                 <!-- Game grid will be generated here -->
+                <div class="board-watermark">
+                    <div class="tiger-image-small"></div>
+                </div>
             </div>
 
             <div class="game-controls">
@@ -77,7 +83,10 @@
 
         <div class="loading-screen hidden" id="loading-screen">
             <div class="loading-content">
-                <div class="tiger-emoji">🪙</div>
+                <div class="fortune-tiger-loading">
+                    <div class="tiger-image-large"></div>
+                    <div class="tiger-emoji">🪙</div>
+                </div>
                 <h2>Loading Fortune Tiger...</h2>
                 <div class="loading-spinner"></div>
             </div>
