@@ -1,9 +1,9 @@
-class TigerTreasures {
+class FortuneTiger {
     constructor() {
         this.gridSize = 8;
         this.gemTypes = ['tiger', 'ruby', 'emerald', 'sapphire', 'diamond', 'topaz', 'amethyst'];
         this.gemEmojis = {
-            'tiger': '🐅',
+            'tiger': '🪙',
             'ruby': '💎',
             'emerald': '💚',
             'sapphire': '💙',
@@ -613,5 +613,5 @@ class TigerTreasures {
 
 // Start the game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new TigerTreasures();
+    new FortuneTiger();
 });
