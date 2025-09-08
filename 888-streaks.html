@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#fc6200">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="888 Streaks - Complete daily fitness challenges and build your streak">
+    <title>888 Streaks – Daily Fitness Challenges</title>
+    
+    <style>
+        :root {
+            --primary: #fc6200;
+            --bg: #ffffff;
+            --surface: #f5f5f5;
+            --text: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #e0e0e0;
+            --success: #4caf50;
+            --locked: #9e9e9e;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --text: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border: #333333;
+            --shadow: rgba(0,0,0,0.3);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #121212;
+                --surface: #1e1e1e;
+                --text: #ffffff;
+                --text-secondary: #aaaaaa;
+                --border: #333333;
+                --shadow: rgba(0,0,0,0.3);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* App Bar */
+        .app-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .settings-btn {
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .settings-btn:hover {
+            background: var(--surface);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px 16px 80px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .streak-counter {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .flame {
+            color: var(--primary);
+        }
+
+        .progress-ring-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-segment {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.3s ease;
+        }
+
+        .progress-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .hero-subtext {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Challenge Cards */
+        .challenge-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .challenge-card.locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .challenge-card.done {
+            border: 2px solid var(--success);
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .challenge-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .challenge-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: var(--border);
+            color: var(--text-secondary);
+        }
+
+        .challenge-status.done {
+            background: var(--success);
+            color: white;
+        }
+
+        .challenge-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select, input[type="number"] {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        button {
+            min-width: 80px;
+            min-height: 44px;
+            padding: 10px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .timer-display {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 8px 0;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stepper-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stepper-value {
+            font-size: 20px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Points Strip */
+        .points-strip {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 24px 0;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .points-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        /* Milestones */
+        .milestones {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 0;
+            margin-bottom: 24px;
+        }
+
+        .milestone-chip {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .milestone-chip.unlocked {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .milestone-icon {
+            font-size: 16px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+            min-height: 44px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 60px;
+            background: var(--bg);
+            padding: 16px;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* History Grid */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .history-day {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .history-day.complete {
+            background: var(--success);
+        }
+
+        .history-day.missed {
+            background: var(--locked);
+        }
+
+        .history-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .history-day:hover .history-tooltip {
+            opacity: 1;
+        }
+
+        /* Profile Settings */
+        .setting-group {
+            margin-bottom: 24px;
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .setting-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 12px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            flex: 1;
+        }
+
+        .modal-btn.secondary {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        /* Confetti */
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            animation: confetti-fall 3s linear;
+            pointer-events: none;
+            z-index: 400;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .confetti {
+                display: none;
+            }
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Bar -->
+    <header class="app-bar">
+        <h1 class="app-title">888 Streaks</h1>
+        <button class="settings-btn" aria-label="Settings" onclick="app.togglePanel('profile')">⚙️</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="todayPanel">
+        <!-- Hero Card -->
+        <div class="hero-card">
+            <div class="streak-counter">
+                Day <span id="streakCount">0</span> <span class="flame">🔥</span>
+            </div>
+            <div class="progress-ring-container">
+                <svg class="progress-ring" width="120" height="120">
+                    <circle class="progress-ring-bg" cx="60" cy="60" r="52"/>
+                    <circle class="progress-ring-segment" id="segment1" cx="60" cy="60" r="52"
+                            stroke-dasharray="0 109" stroke-dashoffset="0"/>
+                    <circle class="progress-ring-segment" id="segment2" cx="60" cy="60" r="52"
+                            stroke-dasharray="0 109" stroke-dashoffset="-109"/>
+                    <circle class="progress-ring-segment" id="segment3" cx="60" cy="60" r="52"
+                            stroke-dasharray="0 109" stroke-dashoffset="-218"/>
+                </svg>
+                <div class="progress-number" id="progressNumber">0</div>
+            </div>
+            <p class="hero-subtext">Complete all three to keep your streak</p>
+        </div>
+
+        <!-- Challenge Cards -->
+        <div id="challengeCards">
+            <!-- 8 Reps Card -->
+            <div class="challenge-card" id="repsCard">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Reps</h2>
+                    <span class="challenge-status" id="repsStatus">Locked</span>
+                </div>
+                <div class="challenge-controls">
+                    <select id="exerciseSelect" aria-label="Select exercise">
+                        <option value="pushups">Push-ups</option>
+                        <option value="squats">Squats</option>
+                        <option value="situps">Sit-ups</option>
+                    </select>
+                    <input type="number" id="repsInput" value="8" min="1" max="100" aria-label="Number of reps">
+                    <button onclick="app.completeReps()">Complete</button>
+                </div>
+            </div>
+
+            <!-- 8 Minutes Card -->
+            <div class="challenge-card locked" id="minutesCard">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Minutes</h2>
+                    <span class="challenge-status" id="minutesStatus">Locked</span>
+                </div>
+                <div class="challenge-controls">
+                    <select id="activitySelect" aria-label="Select activity">
+                        <option value="run">Run</option>
+                        <option value="ride">Ride</option>
+                        <option value="rope">Jump Rope</option>
+                    </select>
+                    <button id="timerBtn" onclick="app.toggleTimer()">Start</button>
+                </div>
+                <div class="timer-display" id="timerDisplay">0:00</div>
+            </div>
+
+            <!-- 8 Rounds Card -->
+            <div class="challenge-card locked" id="roundsCard">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Rounds</h2>
+                    <span class="challenge-status" id="roundsStatus">Locked</span>
+                </div>
+                <div class="challenge-controls">
+                    <select id="mindBodySelect" aria-label="Select mind/body exercise">
+                        <option value="breaths">Breaths</option>
+                        <option value="yoga">Yoga Poses</option>
+                    </select>
+                    <div class="stepper">
+                        <button class="stepper-btn" onclick="app.decrementRounds()">−</button>
+                        <span class="stepper-value" id="roundsValue">0</span>
+                        <button class="stepper-btn" onclick="app.incrementRounds()">+</button>
+                    </div>
+                    <button onclick="app.completeRounds()">Complete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Points Strip -->
+        <div class="points-strip">
+            <div class="points-text">
+                <span>Today: <strong id="todayPoints">0</strong> pts</span>
+                <span>Week: <strong id="weekPoints">0</strong> / 888</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="weekProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="milestones">
+            <div class="milestone-chip" id="milestone8">
+                <span class="milestone-icon">🔒</span>
+                <span>8 Days</span>
+            </div>
+            <div class="milestone-chip" id="milestone88">
+                <span class="milestone-icon">🔒</span>
+                <span>88 Days</span>
+            </div>
+            <div class="milestone-chip" id="milestone888">
+                <span class="milestone-icon">🔒</span>
+                <span>888 Days</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- History Panel -->
+    <div class="panel" id="historyPanel">
+        <div class="panel-content">
+            <h2 style="margin-bottom: 16px;">Last 14 Days</h2>
+            <div class="history-grid" id="historyGrid"></div>
+            <div class="empty-state" id="historyEmpty" style="display: none;">
+                <div class="empty-icon">📊</div>
+                <p>No data yet. Start your first streak!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Panel -->
+    <div class="panel" id="profilePanel">
+        <div class="panel-content">
+            <h2 style="margin-bottom: 24px;">Profile & Settings</h2>
+            
+            <div class="setting-group">
+                <label class="setting-label" for="username">Username</label>
+                <input type="text" id="username" class="setting-input" placeholder="Your name">
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Daily Goals</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="number" class="setting-input" id="goalReps" value="8" min="1" placeholder="Reps">
+                    <input type="number" class="setting-input" id="goalMinutes" value="8" min="1" placeholder="Minutes">
+                    <input type="number" class="setting-input" id="goalRounds" value="8" min="1" placeholder="Rounds">
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Theme</label>
+                <div class="toggle-group">
+                    <button class="toggle-btn" onclick="app.setTheme('light')">Light</button>
+                    <button class="toggle-btn" onclick="app.setTheme('dark')">Dark</button>
+                    <button class="toggle-btn active" onclick="app.setTheme('system')">System</button>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <label class="setting-label">Preferences</label>
+                <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <input type="checkbox" id="haptics" style="width: 20px; height: 20px;">
+                    <span>Enable Haptics</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="sounds" style="width: 20px; height: 20px;">
+                    <span>Enable Sounds</span>
+                </label>
+            </div>
+
+            <button onclick="app.resetDemo()" style="width: 100%; background: var(--locked);">
+                Reset Demo Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="app.switchTab('today')" aria-label="Today">
+            <span class="nav-icon">📅</span>
+            <span>Today</span>
+        </button>
+        <button class="nav-item" onclick="app.switchTab('history')" aria-label="History">
+            <span class="nav-icon">📊</span>
+            <span>History</span>
+        </button>
+        <button class="nav-item" onclick="app.switchTab('profile')" aria-label="Profile">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalText">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle">Streak Reset Warning</h3>
+            <p class="modal-text" id="modalText">You missed a day! Your streak will be reset. Keep going - you've got this!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="app.closeModal()">Cancel</button>
+                <button class="modal-btn" onclick="app.confirmReset()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            state: {
+                streakCount: 0,
+                todayStatus: [false, false, false],
+                weekPoints: 0,
+                history: [],
+                lastCompletedDate: null,
+                timerStartTime: null,
+                timerElapsed: 0,
+                timerInterval: null,
+                currentRounds: 0,
+                theme: 'system'
+            },
+
+            init() {
+                this.loadState();
+                this.checkNewDay();
+                this.updateUI();
+                this.setupEventListeners();
+                
+                // Check for timer recovery
+                if (this.state.timerStartTime) {
+                    this.resumeTimer();
+                }
+            },
+
+            loadState() {
+                const saved = localStorage.getItem('888streaks');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(this.state, parsed);
+                }
+            },
+
+            saveState() {
+                localStorage.setItem('888streaks', JSON.stringify(this.state));
+            },
+
+            checkNewDay() {
+                const today = new Date().toDateString();
+                if (this.state.lastCompletedDate !== today) {
+                    // New day - reset today's status
+                    const wasComplete = this.state.todayStatus.every(s => s);
+                    
+                    if (this.state.lastCompletedDate) {
+                        // Add yesterday to history
+                        this.state.history.unshift({
+                            date: this.state.lastCompletedDate,
+                            complete: wasComplete
+                        });
+                        
+                        // Keep only last 14 days
+                        this.state.history = this.state.history.slice(0, 14);
+                        
+                        // Check if streak broken
+                        const yesterday = new Date();
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        if (this.state.lastCompletedDate !== yesterday.toDateString() && !wasComplete) {
+                            // Missed a day - show modal (simulated)
+                            setTimeout(() => this.showModal(), 1000);
+                        }
+                    }
+                    
+                    this.state.todayStatus = [false, false, false];
+                    this.state.lastCompletedDate = today;
+                    this.saveState();
+                }
+            },
+
+            updateUI() {
+                // Update streak counter
+                document.getElementById('streakCount').textContent = this.state.streakCount;
+                
+                // Update progress ring and number
+                const completed = this.state.todayStatus.filter(s => s).length;
+                document.getElementById('progressNumber').textContent = completed;
+                
+                // Update ring segments
+                for (let i = 0; i < 3; i++) {
+                    const segment = document.getElementById(`segment${i + 1}`);
+                    if (this.state.todayStatus[i]) {
+                        segment.setAttribute('stroke-dasharray', '109 109');
+                    } else {
+                        segment.setAttribute('stroke-dasharray', '0 109');
+                    }
+                }
+                
+                // Update challenge cards
+                this.updateChallengeCard(0, 'reps');
+                this.updateChallengeCard(1, 'minutes');
+                this.updateChallengeCard(2, 'rounds');
+                
+                // Update points
+                const todayPoints = this.state.todayStatus.filter(s => s).length * 29;
+                document.getElementById('todayPoints').textContent = todayPoints;
+                document.getElementById('weekPoints').textContent = this.state.weekPoints;
+                const weekProgress = Math.min((this.state.weekPoints / 888) * 100, 100);
+                document.getElementById('weekProgress').style.width = weekProgress + '%';
+                
+                // Update milestones
+                this.updateMilestones();
+                
+                // Update history
+                this.updateHistory();
+            },
+
+            updateChallengeCard(index, id) {
+                const card = document.getElementById(`${id}Card`);
+                const status = document.getElementById(`${id}Status`);
+                
+                if (this.state.todayStatus[index]) {
+                    card.classList.add('done');
+                    card.classList.remove('locked');
+                    status.textContent = 'Done';
+                    status.classList.add('done');
+                } else if (index === 0 || this.state.todayStatus[index - 1]) {
+                    card.classList.remove('locked', 'done');
+                    status.textContent = 'In progress';
+                    status.classList.remove('done');
+                } else {
+                    card.classList.add('locked');
+                    card.classList.remove('done');
+                    status.textContent = 'Locked';
+                    status.classList.remove('done');
+                }
+            },
+
+            completeReps() {
+                if (!this.state.todayStatus[0]) {
+                    this.state.todayStatus[0] = true;
+                    this.showToast('Nice! 8 reps done ✅');
+                    this.checkAllComplete();
+                    this.saveState();
+                    this.updateUI();
+                    this.playConfetti();
+                }
+            },
+
+            toggleTimer() {
+                const btn = document.getElementById('timerBtn');
+                if (this.state.timerInterval) {
+                    // Pause
+                    this.pauseTimer();
+                    btn.textContent = 'Start';
+                } else {
+                    // Start
+                    this.startTimer();
+                    btn.textContent = 'Pause';
+                }
+            },
+
+            startTimer() {
+                if (!this.state.timerStartTime) {
+                    this.state.timerStartTime = Date.now() - this.state.timerElapsed;
+                }
+                
+                this.state.timerInterval = setInterval(() => {
+                    this.state.timerElapsed = Date.now() - this.state.timerStartTime;
+                    this.updateTimerDisplay();
+                    
+                    // Auto-complete at 8 minutes
+                    if (this.state.timerElapsed >= 8 * 60 * 1000) {
+                        this.completeTimer();
+                    }
+                    
+                    this.saveState();
+                }, 100);
+            },
+
+            pauseTimer() {
+                if (this.state.timerInterval) {
+                    clearInterval(this.state.timerInterval);
+                    this.state.timerInterval = null;
+                    this.saveState();
+                }
+            },
+
+            resumeTimer() {
+                if (this.state.timerStartTime && !this.state.todayStatus[1]) {
+                    this.state.timerElapsed = Date.now() - this.state.timerStartTime;
+                    this.updateTimerDisplay();
+                    document.getElementById('timerBtn').textContent = 'Start';
+                }
+            },
+
+            completeTimer() {
+                this.pauseTimer();
+                this.state.todayStatus[1] = true;
+                this.state.timerStartTime = null;
+                this.state.timerElapsed = 0;
+                this.showToast('Timer finished 🎯 8 minutes logged');
+                this.checkAllComplete();
+                this.saveState();
+                this.updateUI();
+                this.playConfetti();
+                document.getElementById('timerBtn').textContent = 'Start';
+                document.getElementById('timerDisplay').textContent = '0:00';
+            },
+
+            updateTimerDisplay() {
+                const seconds = Math.floor(this.state.timerElapsed / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes}:${secs.toString().padStart(2, '0')}`;
+            },
+
+            incrementRounds() {
+                if (this.state.currentRounds < 8) {
+                    this.state.currentRounds++;
+                    document.getElementById('roundsValue').textContent = this.state.currentRounds;
+                }
+            },
+
+            decrementRounds() {
+                if (this.state.currentRounds > 0) {
+                    this.state.currentRounds--;
+                    document.getElementById('roundsValue').textContent = this.state.currentRounds;
+                }
+            },
+
+            completeRounds() {
+                if (this.state.currentRounds >= 8 && !this.state.todayStatus[2]) {
+                    this.state.todayStatus[2] = true;
+                    this.showToast('Great job! 8 rounds complete ✅');
+                    this.checkAllComplete();
+                    this.saveState();
+                    this.updateUI();
+                    this.playConfetti();
+                }
+            },
+
+            checkAllComplete() {
+                if (this.state.todayStatus.every(s => s)) {
+                    this.state.streakCount++;
+                    this.state.weekPoints = Math.min(this.state.weekPoints + 88, 888);
+                    setTimeout(() => {
+                        this.showToast('All 3 complete—streak +1 🔥');
+                    }, 500);
+                }
+            },
+
+            updateMilestones() {
+                const milestones = [8, 88, 888];
+                milestones.forEach(m => {
+                    const chip = document.getElementById(`milestone${m}`);
+                    if (this.state.streakCount >= m) {
+                        chip.classList.add('unlocked');
+                        chip.querySelector('.milestone-icon').textContent = '🏆';
+                    } else {
+                        chip.classList.remove('unlocked');
+                        chip.querySelector('.milestone-icon').textContent = '🔒';
+                    }
+                });
+            },
+
+            updateHistory() {
+                const grid = document.getElementById('historyGrid');
+                const empty = document.getElementById('historyEmpty');
+                
+                if (this.state.history.length === 0) {
+                    grid.style.display = 'none';
+                    empty.style.display = 'block';
+                    return;
+                }
+                
+                grid.style.display = 'grid';
+                empty.style.display = 'none';
+                grid.innerHTML = '';
+                
+                // Add today
+                const today = document.createElement('div');
+                today.className = 'history-day';
+                if (this.state.todayStatus.every(s => s)) {
+                    today.classList.add('complete');
+                }
+                today.innerHTML = `
+                    <span>T</span>
+                    <span class="history-tooltip">Today</span>
+                `;
+                grid.appendChild(today);
+                
+                // Add history
+                this.state.history.slice(0, 13).forEach((day, i) => {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'history-day';
+                    if (day.complete) {
+                        dayEl.classList.add('complete');
+                    } else {
+                        dayEl.classList.add('missed');
+                    }
+                    const date = new Date(day.date);
+                    dayEl.innerHTML = `
+                        <span>${date.getDate()}</span>
+                        <span class="history-tooltip">${date.toLocaleDateString()}</span>
+                    `;
+                    grid.appendChild(dayEl);
+                });
+            },
+
+            switchTab(tab) {
+                // Update nav
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                event.target.closest('.nav-item').classList.add('active');
+                
+                // Update panels
+                document.querySelectorAll('.panel').forEach(panel => {
+                    panel.classList.remove('active');
+                });
+                
+                if (tab === 'history') {
+                    document.getElementById('historyPanel').classList.add('active');
+                } else if (tab === 'profile') {
+                    document.getElementById('profilePanel').classList.add('active');
+                }
+            },
+
+            togglePanel(panel) {
+                const panelEl = document.getElementById(`${panel}Panel`);
+                panelEl.classList.toggle('active');
+            },
+
+            setTheme(theme) {
+                this.state.theme = theme;
+                document.querySelectorAll('.toggle-group .toggle-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                if (theme === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                }
+                
+                this.saveState();
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            },
+
+            showModal() {
+                document.getElementById('modal').classList.add('show');
+            },
+
+            closeModal() {
+                document.getElementById('modal').classList.remove('show');
+            },
+
+            confirmReset() {
+                this.state.streakCount = 0;
+                this.closeModal();
+                this.saveState();
+                this.updateUI();
+            },
+
+            playConfetti() {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    return;
+                }
+                
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.backgroundColor = ['#fc6200', '#4caf50', '#2196f3'][Math.floor(Math.random() * 3)];
+                        document.body.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 3000);
+                    }, i * 100);
+                }
+            },
+
+            resetDemo() {
+                if (confirm('Reset all demo data? This cannot be undone.')) {
+                    localStorage.removeItem('888streaks');
+                    this.state = {
+                        streakCount: 0,
+                        todayStatus: [false, false, false],
+                        weekPoints: 0,
+                        history: [],
+                        lastCompletedDate: null,
+                        timerStartTime: null,
+                        timerElapsed: 0,
+                        timerInterval: null,
+                        currentRounds: 0,
+                        theme: 'system'
+                    };
+                    this.updateUI();
+                    this.showToast('Demo data reset successfully');
+                }
+            },
+
+            setupEventListeners() {
+                // Handle page visibility for timer
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && this.state.timerInterval) {
+                        this.state.timerElapsed = Date.now() - this.state.timerStartTime;
+                        this.updateTimerDisplay();
+                    }
+                });
+                
+                // Handle keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeModal();
+                        document.querySelectorAll('.panel.active').forEach(panel => {
+                            panel.classList.remove('active');
+                        });
+                    }
+                });
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
