@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Hollywood Crazy Wheel</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFD700">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <h1 class="game-title">HOLLYWOOD<br>CRAZY WHEEL</h1>
+                <div class="loading-spinner"></div>
+                <p>Loading your studio...</p>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen">
+            <div class="menu-header">
+                <h1 class="game-title">HOLLYWOOD<br>CRAZY WHEEL</h1>
+                <div class="subtitle">Lights, Camera, Action!</div>
+            </div>
+            <div class="menu-buttons">
+                <button id="play-btn" class="menu-btn primary">PLAY</button>
+                <button id="daily-btn" class="menu-btn">DAILY PREMIERE</button>
+                <button id="endless-btn" class="menu-btn">AFTER PARTY</button>
+                <button id="collection-btn" class="menu-btn">MOVIE COLLECTION</button>
+            </div>
+            <div class="currency-display">
+                <div class="currency-item">
+                    <span class="currency-icon">🎟️</span>
+                    <span id="tickets-count">0</span>
+                </div>
+                <div class="currency-item">
+                    <span class="currency-icon">⭐</span>
+                    <span id="stars-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <!-- HUD -->
+            <div id="game-hud">
+                <div class="hud-top">
+                    <div class="level-info">
+                        <span id="level-number">Level 1</span>
+                        <span id="level-objective">Score 1000</span>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Score</span>
+                            <span id="current-score">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Moves</span>
+                            <span id="moves-left">20</span>
+                        </div>
+                        <div class="stat" id="timer-stat" style="display: none;">
+                            <span class="stat-label">Time</span>
+                            <span id="time-left">60</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Crazy Wheel -->
+                <div id="crazy-wheel-container">
+                    <canvas id="crazy-wheel" width="200" height="200"></canvas>
+                    <div id="wheel-pointer"></div>
+                    <button id="spin-wheel-btn" class="spin-btn" disabled>SPIN</button>
+                </div>
+            </div>
+
+            <!-- Game Board -->
+            <div id="game-board-container">
+                <canvas id="game-board" width="350" height="450"></canvas>
+                <div id="chain-overlay"></div>
+            </div>
+
+            <!-- Power-ups Bar -->
+            <div id="powerups-bar">
+                <button class="powerup-btn" id="directors-cut" data-powerup="directors-cut">
+                    <span class="powerup-icon">🎬</span>
+                    <span class="powerup-count">0</span>
+                </button>
+                <button class="powerup-btn" id="clapboard-smash" data-powerup="clapboard-smash">
+                    <span class="powerup-icon">🎬</span>
+                    <span class="powerup-count">0</span>
+                </button>
+                <button class="powerup-btn" id="spotlight-beam" data-powerup="spotlight-beam">
+                    <span class="powerup-icon">💡</span>
+                    <span class="powerup-count">0</span>
+                </button>
+                <button class="powerup-btn" id="re-shoot" data-powerup="re-shoot">
+                    <span class="powerup-icon">🔄</span>
+                    <span class="powerup-count">0</span>
+                </button>
+            </div>
+
+            <!-- Pause/Menu Button -->
+            <button id="pause-btn" class="icon-btn">⏸️</button>
+        </div>
+
+        <!-- Mini-game Screen -->
+        <div id="minigame-screen" class="screen">
+            <div id="minigame-container">
+                <h2 id="minigame-title">Red Carpet Runner</h2>
+                <canvas id="minigame-canvas" width="350" height="300"></canvas>
+                <div id="minigame-instructions">Swipe to dodge paparazzi and grab stars!</div>
+                <div id="minigame-timer">10</div>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete" class="screen">
+            <div class="complete-content">
+                <h2>Scene Complete!</h2>
+                <div class="stars-earned">
+                    <div class="star">⭐</div>
+                    <div class="star">⭐</div>
+                    <div class="star">⭐</div>
+                </div>
+                <div class="rewards">
+                    <div class="reward-item">
+                        <span class="reward-icon">🎟️</span>
+                        <span id="tickets-earned">+50</span>
+                    </div>
+                </div>
+                <div class="level-complete-buttons">
+                    <button id="next-level-btn" class="menu-btn primary">NEXT SCENE</button>
+                    <button id="replay-level-btn" class="menu-btn">REPLAY</button>
+                    <button id="main-menu-btn" class="menu-btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie Collection Screen -->
+        <div id="collection-screen" class="screen">
+            <div class="collection-header">
+                <h2>Movie Collection</h2>
+                <button id="collection-back-btn" class="back-btn">← Back</button>
+            </div>
+            <div id="movies-grid">
+                <!-- Movies will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="overlay">
+            <div class="pause-content">
+                <h3>Game Paused</h3>
+                <button id="resume-btn" class="menu-btn primary">RESUME</button>
+                <button id="restart-btn" class="menu-btn">RESTART LEVEL</button>
+                <button id="quit-btn" class="menu-btn">MAIN MENU</button>
+            </div>
+        </div>
+
+        <!-- Wheel Result Popup -->
+        <div id="wheel-result" class="overlay">
+            <div class="wheel-result-content">
+                <h3 id="wheel-result-title">Double Score!</h3>
+                <div id="wheel-result-description">Your next chain will score double points!</div>
+                <button id="wheel-result-ok" class="menu-btn primary">ACTION!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/wheel.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/powerups.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/economy.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

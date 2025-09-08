@@ -1,0 +1,354 @@
+{
+  "gameConfig": {
+    "boardCols": 7,
+    "boardRows": 9,
+    "tileSize": 40,
+    "chainMinLength": 3,
+    "wheelSectors": 8,
+    "minigameDuration": 10000
+  },
+  "tileTypes": [
+    { "id": 0, "name": "Camera", "icon": "📷", "color": "#FFD700" },
+    { "id": 1, "name": "Film", "icon": "🎬", "color": "#6A0572" },
+    { "id": 2, "name": "Star", "icon": "⭐", "color": "#A0027D" },
+    { "id": 3, "name": "Ticket", "icon": "🎟️", "color": "#008B8B" },
+    { "id": 4, "name": "Wild", "icon": "🌟", "color": "#FFFFFF" },
+    { "id": 5, "name": "Prop", "icon": "🎭", "color": "#CCCCCC" }
+  ],
+  "wheelSectors": [
+    {
+      "id": "double_score",
+      "type": "boost",
+      "name": "Double Score",
+      "description": "Next chain scores double points!",
+      "icon": "2️⃣",
+      "color": "#FFD700",
+      "weight": 15
+    },
+    {
+      "id": "extra_moves",
+      "type": "boost", 
+      "name": "+5 Moves",
+      "description": "Gain 5 extra moves!",
+      "icon": "➕",
+      "color": "#008B8B",
+      "weight": 20
+    },
+    {
+      "id": "time_freeze",
+      "type": "boost",
+      "name": "Time Freeze", 
+      "description": "Stop the timer for 10 seconds!",
+      "icon": "❄️",
+      "color": "#6A0572",
+      "weight": 10
+    },
+    {
+      "id": "rainbow_wilds",
+      "type": "boost",
+      "name": "Rainbow Wilds",
+      "description": "3 random tiles become wild!",
+      "icon": "🌈", 
+      "color": "#FFFFFF",
+      "weight": 12
+    },
+    {
+      "id": "paparazzi_fog",
+      "type": "challenge",
+      "name": "Paparazzi Fog",
+      "description": "Some tiles hidden for 10 seconds!",
+      "icon": "📸",
+      "color": "#CCCCCC",
+      "weight": 8
+    },
+    {
+      "id": "script_rewrite", 
+      "type": "challenge",
+      "name": "Script Rewrite",
+      "description": "Board gets shuffled!",
+      "icon": "📝",
+      "color": "#A0027D",
+      "weight": 10
+    },
+    {
+      "id": "red_carpet",
+      "type": "minigame",
+      "name": "Red Carpet",
+      "description": "Dodge paparazzi for bonus tickets!",
+      "icon": "🎭",
+      "color": "#A0027D", 
+      "weight": 8
+    },
+    {
+      "id": "casting_call",
+      "type": "minigame",
+      "name": "Casting Call", 
+      "description": "Find matching faces quickly!",
+      "icon": "🎬",
+      "color": "#6A0572",
+      "weight": 7
+    }
+  ],
+  "powerups": [
+    {
+      "id": "directors-cut",
+      "name": "Director's Cut",
+      "description": "Clear a 3x3 area around selected tile",
+      "icon": "🎬",
+      "cost": { "tickets": 100 }
+    },
+    {
+      "id": "clapboard-smash", 
+      "name": "Clapboard Smash",
+      "description": "Clear all tiles of selected type",
+      "icon": "🎬", 
+      "cost": { "tickets": 80 }
+    },
+    {
+      "id": "spotlight-beam",
+      "name": "Spotlight Beam",
+      "description": "Clear entire row or column",
+      "icon": "💡",
+      "cost": { "tickets": 150 }
+    },
+    {
+      "id": "re-shoot",
+      "name": "Re-Shoot", 
+      "description": "Undo your last move",
+      "icon": "🔄",
+      "cost": { "tickets": 50 }
+    }
+  ],
+  "sampleLevels": [
+    {
+      "id": 1,
+      "name": "First Take",
+      "movie": "Action Adventure",
+      "objective": {
+        "type": "score",
+        "target": 500,
+        "description": "Score 500 points"
+      },
+      "moves": 15,
+      "timeLimit": null,
+      "wheelSpins": 1,
+      "difficulty": "tutorial",
+      "specialTiles": [],
+      "rewards": {
+        "tickets": 50,
+        "stars": 0,
+        "powerups": []
+      }
+    },
+    {
+      "id": 5,
+      "name": "Perfect Take",
+      "movie": "Action Adventure", 
+      "objective": {
+        "type": "no_mistakes",
+        "target": 800,
+        "description": "Score 800 points without invalid moves"
+      },
+      "moves": 25,
+      "timeLimit": null,
+      "wheelSpins": 2,
+      "difficulty": "medium",
+      "specialTiles": [],
+      "rewards": {
+        "tickets": 100,
+        "stars": 1,
+        "powerups": ["clapboard-smash"]
+      }
+    },
+    {
+      "id": 10,
+      "name": "Action Finale - PREMIERE",
+      "movie": "Action Adventure",
+      "objective": {
+        "type": "boss",
+        "phase1": {
+          "type": "score", 
+          "target": 1500,
+          "description": "Phase 1: Score 1500 points"
+        },
+        "phase2": {
+          "type": "clear_props",
+          "target": 10,
+          "description": "Phase 2: Clear 10 special tiles"
+        }
+      },
+      "moves": 35,
+      "timeLimit": null,
+      "wheelSpins": 3,
+      "difficulty": "hard",
+      "specialTiles": [
+        { "type": "wild", "count": 2 }
+      ],
+      "rewards": {
+        "tickets": 200,
+        "stars": 2,
+        "powerups": ["directors-cut", "spotlight-beam"]
+      }
+    }
+  ],
+  "movies": [
+    {
+      "name": "Action Adventure",
+      "genre": "action", 
+      "color": "#FFD700",
+      "levels": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      "poster": {
+        "title": "EXPLOSIVE ADVENTURE",
+        "tagline": "Action never looked so good",
+        "completion_bonus": {
+          "tickets": 500,
+          "passive_buff": "score_boost_2_percent"
+        }
+      }
+    },
+    {
+      "name": "Romantic Comedy",
+      "genre": "romance",
+      "color": "#A0027D", 
+      "levels": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      "poster": {
+        "title": "LOVE IN HOLLYWOOD", 
+        "tagline": "Romance is in the air",
+        "completion_bonus": {
+          "tickets": 600,
+          "passive_buff": "chain_length_bonus"
+        }
+      }
+    },
+    {
+      "name": "Sci-Fi Epic",
+      "genre": "scifi",
+      "color": "#008B8B",
+      "levels": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+      "poster": {
+        "title": "STARS BEYOND",
+        "tagline": "The future is now", 
+        "completion_bonus": {
+          "tickets": 700,
+          "passive_buff": "powerup_discount_10_percent"
+        }
+      }
+    }
+  ],
+  "dailyChallenge": {
+    "id": "daily_2024_01_15",
+    "name": "Daily Premiere",
+    "type": "daily",
+    "objective": {
+      "type": "score",
+      "target": 2500,
+      "description": "Achieve high score with special modifiers!"
+    },
+    "moves": 25,
+    "timeLimit": null,
+    "modifiers": ["double_score_chance", "extra_wilds", "chain_bonus"],
+    "rewards": {
+      "tickets": 200,
+      "stars": 2,
+      "powerups": ["directors-cut", "clapboard-smash", "re-shoot"]
+    },
+    "expiresAt": "2024-01-16T00:00:00Z"
+  },
+  "economy": {
+    "currencies": {
+      "tickets": { "name": "Tickets", "icon": "🎟️", "type": "soft" },
+      "stars": { "name": "Stars", "icon": "⭐", "type": "hard" }
+    },
+    "shop": {
+      "powerups": {
+        "directors-cut": { "tickets": 100 },
+        "clapboard-smash": { "tickets": 80 },
+        "spotlight-beam": { "tickets": 150 },
+        "re-shoot": { "tickets": 50 }
+      },
+      "boosters": {
+        "extra_moves": { "tickets": 20 },
+        "extra_time": { "tickets": 30 },
+        "wheel_spin": { "tickets": 50 }
+      },
+      "premium": {
+        "starter_pack": { 
+          "stars": 5,
+          "contents": {
+            "tickets": 500,
+            "powerups": {
+              "directors-cut": 3,
+              "clapboard-smash": 3, 
+              "spotlight-beam": 2,
+              "re-shoot": 5
+            },
+            "no_ads_days": 7
+          }
+        },
+        "no_ads_month": { "stars": 10 }
+      }
+    },
+    "rewards": {
+      "level_completion": {
+        "base_tickets": 50,
+        "star_bonus": 20,
+        "level_multiplier": 5
+      },
+      "daily_login": {
+        "tickets": 100,
+        "stars": 1,
+        "streak_bonus": 20
+      },
+      "chain_completion": {
+        "base_tickets": 2,
+        "length_multiplier": 0.5,
+        "long_chain_bonus": 5
+      }
+    }
+  },
+  "settings": {
+    "audio": {
+      "sfx_volume": 0.7,
+      "music_volume": 0.5,
+      "sfx_enabled": true,
+      "music_enabled": true
+    },
+    "gameplay": {
+      "vibration_enabled": true,
+      "particle_effects": true,
+      "animation_speed": 1.0
+    },
+    "display": {
+      "theme": "hollywood_glam",
+      "language": "en",
+      "safe_area_insets": true
+    }
+  },
+  "analytics": {
+    "events": [
+      "game_start",
+      "level_start", 
+      "level_complete",
+      "level_fail",
+      "wheel_spin",
+      "powerup_use",
+      "minigame_start",
+      "minigame_complete",
+      "currency_earn",
+      "currency_spend",
+      "ad_view",
+      "iap_purchase"
+    ],
+    "metrics": [
+      "session_length",
+      "retention_d1",
+      "retention_d7", 
+      "retention_d30",
+      "level_completion_rate",
+      "average_score",
+      "powerup_usage_rate",
+      "ad_conversion_rate",
+      "iap_conversion_rate"
+    ]
+  }
+}
