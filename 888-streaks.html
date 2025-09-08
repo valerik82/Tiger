@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="888 Streaks - Daily Fitness Challenges. Complete 3 micro-challenges daily to maintain your streak.">
+    <meta name="theme-color" content="#fc6200">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>888 Streaks - Daily Fitness Challenges</title>
+    
+    <style>
+        :root {
+            --primary-color: #fc6200;
+            --background-color: #ffffff;
+            --surface-color: #ffffff;
+            --text-color: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #121212;
+                --surface-color: #1e1e1e;
+                --text-color: #ffffff;
+                --text-secondary: #b3b3b3;
+                --border-color: #333333;
+                --shadow: 0 2px 8px rgba(0,0,0,0.3);
+                --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
+            }
+        }
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --surface-color: #ffffff;
+            --text-color: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --background-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-color: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-color: #333333;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* App Bar */
+        .app-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover, .settings-btn:focus {
+            background-color: var(--border-color);
+            outline: 2px solid var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            padding-bottom: 80px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: var(--surface-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .streak-counter {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .progress-ring-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+        }
+
+        .progress-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.3s ease;
+        }
+
+        .progress-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Challenge Cards */
+        .challenge-card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .challenge-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .challenge-status {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-locked {
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .status-progress {
+            background: rgba(252, 98, 0, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-done {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .challenge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        .input-group select,
+        .input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--background-color);
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .timer-display {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary-color);
+            margin: 8px 0;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .stepper-btn {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--primary-color);
+            background: none;
+            color: var(--primary-color);
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stepper-btn:hover, .stepper-btn:focus {
+            background: var(--primary-color);
+            color: white;
+            outline: 2px solid var(--primary-color);
+        }
+
+        .stepper-value {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn:hover, .btn:focus {
+            opacity: 0.9;
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        /* Points Strip */
+        .points-strip {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .points-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        /* Milestones */
+        .milestones {
+            margin-bottom: 24px;
+        }
+
+        .milestones h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .milestone-chips {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .milestone-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .milestone-locked {
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .milestone-unlocked {
+            background: rgba(252, 98, 0, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 12px 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            min-height: 60px;
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+        }
+
+        .nav-tab:hover, .nav-tab:focus {
+            background-color: var(--border-color);
+            outline: 2px solid var(--primary-color);
+        }
+
+        /* Panels */
+        .panel {
+            display: none;
+            padding: 16px;
+            padding-bottom: 80px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* History Grid */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .history-day {
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .history-complete {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .history-missed {
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .history-today {
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Profile Settings */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .theme-toggle {
+            background: var(--border-color);
+            border: none;
+            border-radius: 20px;
+            padding: 4px;
+            cursor: pointer;
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle.dark::after {
+            transform: translateX(28px);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-color);
+            color: var(--background-color);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .modal-content p {
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            animation: confetti-fall 3s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .main-content,
+            .panel {
+                max-width: 480px;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        button:focus,
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 1px;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Bar -->
+    <header class="app-bar">
+        <h1 class="app-title">888 Streaks</h1>
+        <button class="settings-btn" onclick="showSettings()" aria-label="Settings">⚙️</button>
+    </header>
+
+    <!-- Today Tab Content -->
+    <main class="main-content" id="today-panel">
+        <!-- Hero Card -->
+        <section class="hero-card">
+            <div class="streak-counter" id="streak-counter">Day 0 🔥</div>
+            <div class="progress-ring-container">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                    <circle class="progress-ring-bg" cx="60" cy="60" r="50"></circle>
+                    <circle class="progress-ring-fill" cx="60" cy="60" r="50" 
+                            stroke-dasharray="0 314" id="progress-ring"></circle>
+                </svg>
+                <div class="progress-center" id="progress-center">0</div>
+            </div>
+            <p class="hero-subtitle">Complete all three to keep your streak</p>
+        </section>
+
+        <!-- Challenge Cards -->
+        <section class="challenges">
+            <!-- 8 Reps Challenge -->
+            <div class="challenge-card" id="reps-card">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Reps</h2>
+                    <span class="challenge-status status-locked" id="reps-status">Locked</span>
+                </div>
+                <div class="challenge-content">
+                    <div class="input-group">
+                        <label for="exercise-select">Exercise:</label>
+                        <select id="exercise-select">
+                            <option value="push-ups">Push-ups</option>
+                            <option value="squats">Squats</option>
+                            <option value="sit-ups">Sit-ups</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="reps-input">Reps:</label>
+                        <input type="number" id="reps-input" value="8" min="1" max="100">
+                    </div>
+                    <button class="btn" id="reps-btn" onclick="completeReps()">Complete</button>
+                </div>
+            </div>
+
+            <!-- 8 Minutes Challenge -->
+            <div class="challenge-card" id="minutes-card">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Minutes</h2>
+                    <span class="challenge-status status-locked" id="minutes-status">Locked</span>
+                </div>
+                <div class="challenge-content">
+                    <div class="input-group">
+                        <label for="activity-select">Activity:</label>
+                        <select id="activity-select">
+                            <option value="run">Run</option>
+                            <option value="ride">Ride</option>
+                            <option value="rope">Jump Rope</option>
+                        </select>
+                    </div>
+                    <div class="timer-display" id="timer-display">8:00</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" id="timer-start" onclick="startTimer()" style="flex: 1;">Start</button>
+                        <button class="btn" id="timer-finish" onclick="finishTimer()" style="flex: 1;" disabled>Finish</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8 Rounds Challenge -->
+            <div class="challenge-card" id="rounds-card">
+                <div class="challenge-header">
+                    <h2 class="challenge-title">8 Rounds</h2>
+                    <span class="challenge-status status-locked" id="rounds-status">Locked</span>
+                </div>
+                <div class="challenge-content">
+                    <div class="input-group">
+                        <label for="mindBody-select">Activity:</label>
+                        <select id="mindBody-select">
+                            <option value="breaths">Deep Breaths</option>
+                            <option value="yoga">Yoga Poses</option>
+                            <option value="meditation">Meditation</option>
+                        </select>
+                    </div>
+                    <div class="stepper">
+                        <button class="stepper-btn" onclick="changeRounds(-1)" aria-label="Decrease rounds">−</button>
+                        <span class="stepper-value" id="rounds-value">8</span>
+                        <button class="stepper-btn" onclick="changeRounds(1)" aria-label="Increase rounds">+</button>
+                    </div>
+                    <button class="btn" id="rounds-btn" onclick="completeRounds()">Complete</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Points Strip -->
+        <section class="points-strip">
+            <div class="points-text" id="points-text">Today: 0 pts / Week: 888 target</div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="week-progress" style="width: 0%"></div>
+            </div>
+        </section>
+
+        <!-- Milestones -->
+        <section class="milestones">
+            <h3>Milestones</h3>
+            <div class="milestone-chips" id="milestone-chips">
+                <div class="milestone-chip milestone-locked">🔒 8 Days</div>
+                <div class="milestone-chip milestone-locked">🔒 88 Days</div>
+                <div class="milestone-chip milestone-locked">🔒 888 Days</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- History Panel -->
+    <section class="panel" id="history-panel">
+        <h2>History</h2>
+        <div class="history-grid" id="history-grid">
+            <!-- Generated by JS -->
+        </div>
+        <p id="history-empty" style="text-align: center; color: var(--text-secondary); display: none;">
+            No data yet. Start your first streak!
+        </p>
+    </section>
+
+    <!-- Profile Panel -->
+    <section class="panel" id="profile-panel">
+        <h2>Profile</h2>
+        <div class="setting-item">
+            <span>Username</span>
+            <input type="text" id="username-input" placeholder="Enter username" style="border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px;">
+        </div>
+        <div class="setting-item">
+            <span>Daily Goals</span>
+            <span>8/8/8</span>
+        </div>
+        <div class="setting-item">
+            <span>Theme</span>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+        </div>
+        <div class="setting-item">
+            <span>Haptics</span>
+            <input type="checkbox" id="haptics-toggle" checked>
+        </div>
+        <div class="setting-item">
+            <span>Sounds</span>
+            <input type="checkbox" id="sounds-toggle" checked>
+        </div>
+        <div class="setting-item">
+            <button class="btn btn-secondary" onclick="resetDemoData()" style="width: 100%;">Reset Demo Data</button>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-tab active" onclick="showTab('today')" aria-label="Today tab">
+            <span style="font-size: 20px;">🏠</span>
+            <span>Today</span>
+        </button>
+        <button class="nav-tab" onclick="showTab('history')" aria-label="History tab">
+            <span style="font-size: 20px;">📊</span>
+            <span>History</span>
+        </button>
+        <button class="nav-tab" onclick="showTab('profile')" aria-label="Profile tab">
+            <span style="font-size: 20px;">👤</span>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-desc">
+        <div class="modal-content">
+            <h3 id="modal-title">Reset Streak?</h3>
+            <p id="modal-desc">This will reset all your progress. Are you sure?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn" onclick="confirmReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div class="confetti" id="confetti"></div>
+
+    <script>
+        // State Management
+        let state = {
+            streakCount: 0,
+            todayStatus: [false, false, false],
+            weekPoints: 0,
+            history: [],
+            lastCompletedDate: null,
+            timerStartTime: null,
+            timerElapsed: 0,
+            timerRunning: false,
+            roundsCount: 8,
+            theme: 'system'
+        };
+
+        // Load state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('888streaks');
+            if (saved) {
+                state = { ...state, ...JSON.parse(saved) };
+            }
+            
+            // Check if it's a new day
+            const today = new Date().toDateString();
+            if (state.lastCompletedDate !== today) {
+                // Reset daily progress but keep streak if completed yesterday
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (state.lastCompletedDate !== yesterday.toDateString() && state.todayStatus.every(Boolean)) {
+                    // Missed a day, reset streak
+                    state.streakCount = 0;
+                }
+                
+                state.todayStatus = [false, false, false];
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('888streaks', JSON.stringify(state));
+        }
+
+        // Initialize app
+        function init() {
+            loadState();
+            updateUI();
+            initTimer();
+            applyTheme();
+            generateHistory();
+            
+            // Set up timer persistence
+            setInterval(updateTimer, 1000);
+        }
+
+        // Update UI based on current state
+        function updateUI() {
+            // Update streak counter
+            document.getElementById('streak-counter').textContent = `Day ${state.streakCount} 🔥`;
+            
+            // Update progress ring
+            const completedCount = state.todayStatus.filter(Boolean).length;
+            updateProgressRing(completedCount);
+            
+            // Update challenge statuses
+            updateChallengeStatuses();
+            
+            // Update points
+            updatePoints();
+            
+            // Update milestones
+            updateMilestones();
+        }
+
+        // Update circular progress ring
+        function updateProgressRing(completed) {
+            const ring = document.getElementById('progress-ring');
+            const center = document.getElementById('progress-center');
+            const circumference = 2 * Math.PI * 50; // radius = 50
+            const progress = (completed / 3) * circumference;
+            
+            ring.style.strokeDasharray = `${progress} ${circumference}`;
+            center.textContent = completed;
+        }
+
+        // Update challenge card statuses
+        function updateChallengeStatuses() {
+            const statuses = ['reps', 'minutes', 'rounds'];
+            
+            statuses.forEach((challenge, index) => {
+                const statusEl = document.getElementById(`${challenge}-status`);
+                const cardEl = document.getElementById(`${challenge}-card`);
+                
+                if (state.todayStatus[index]) {
+                    statusEl.textContent = 'Done';
+                    statusEl.className = 'challenge-status status-done';
+                } else {
+                    statusEl.textContent = 'Ready';
+                    statusEl.className = 'challenge-status status-progress';
+                }
+            });
+        }
+
+        // Update points display
+        function updatePoints() {
+            const todayPoints = state.todayStatus.filter(Boolean).length * 88;
+            document.getElementById('points-text').textContent = 
+                `Today: ${todayPoints} pts / Week: 888 target`;
+            
+            const weekProgress = Math.min((state.weekPoints / 888) * 100, 100);
+            document.getElementById('week-progress').style.width = `${weekProgress}%`;
+        }
+
+        // Update milestone badges
+        function updateMilestones() {
+            const milestones = [8, 88, 888];
+            const container = document.getElementById('milestone-chips');
+            
+            container.innerHTML = milestones.map(milestone => {
+                const unlocked = state.streakCount >= milestone;
+                return `
+                    <div class="milestone-chip ${unlocked ? 'milestone-unlocked' : 'milestone-locked'}">
+                        ${unlocked ? '🏆' : '🔒'} ${milestone} Days
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Challenge completion functions
+        function completeReps() {
+            if (!state.todayStatus[0]) {
+                state.todayStatus[0] = true;
+                checkDayCompletion();
+                showToast('Nice! 8 reps done ✅');
+                updateUI();
+                saveState();
+            }
+        }
+
+        function completeRounds() {
+            if (!state.todayStatus[2]) {
+                state.todayStatus[2] = true;
+                checkDayCompletion();
+                showToast(`${state.roundsCount} rounds complete! 🧘`);
+                updateUI();
+                saveState();
+            }
+        }
+
+        // Timer functionality
+        function initTimer() {
+            if (state.timerRunning && state.timerStartTime) {
+                const now = Date.now();
+                const elapsed = Math.floor((now - state.timerStartTime) / 1000);
+                state.timerElapsed = elapsed;
+                
+                if (elapsed >= 480) { // 8 minutes
+                    finishTimer();
+                } else {
+                    updateTimerDisplay();
+                    document.getElementById('timer-start').textContent = 'Pause';
+                    document.getElementById('timer-finish').disabled = false;
+                }
+            }
+        }
+
+        function startTimer() {
+            if (!state.timerRunning) {
+                state.timerRunning = true;
+                state.timerStartTime = Date.now() - (state.timerElapsed * 1000);
+                document.getElementById('timer-start').textContent = 'Pause';
+                document.getElementById('timer-finish').disabled = false;
+            } else {
+                state.timerRunning = false;
+                document.getElementById('timer-start').textContent = 'Start';
+            }
+            saveState();
+        }
+
+        function finishTimer() {
+            if (state.timerElapsed >= 480 && !state.todayStatus[1]) { // 8 minutes
+                state.todayStatus[1] = true;
+                checkDayCompletion();
+                showToast('Timer finished 🎯 8 minutes logged');
+            }
+            
+            // Reset timer
+            state.timerRunning = false;
+            state.timerStartTime = null;
+            state.timerElapsed = 0;
+            document.getElementById('timer-start').textContent = 'Start';
+            document.getElementById('timer-finish').disabled = true;
+            document.getElementById('timer-display').textContent = '8:00';
+            
+            updateUI();
+            saveState();
+        }
+
+        function updateTimer() {
+            if (state.timerRunning && state.timerStartTime) {
+                const now = Date.now();
+                const elapsed = Math.floor((now - state.timerStartTime) / 1000);
+                state.timerElapsed = elapsed;
+                
+                if (elapsed >= 480) { // 8 minutes
+                    finishTimer();
+                } else {
+                    updateTimerDisplay();
+                }
+                saveState();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const remaining = Math.max(0, 480 - state.timerElapsed); // 8 minutes = 480 seconds
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            document.getElementById('timer-display').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Rounds stepper
+        function changeRounds(delta) {
+            state.roundsCount = Math.max(1, Math.min(20, state.roundsCount + delta));
+            document.getElementById('rounds-value').textContent = state.roundsCount;
+            saveState();
+        }
+
+        // Check if all challenges are completed
+        function checkDayCompletion() {
+            if (state.todayStatus.every(Boolean)) {
+                const today = new Date().toDateString();
+                if (state.lastCompletedDate !== today) {
+                    state.streakCount++;
+                    state.weekPoints += 88;
+                    state.lastCompletedDate = today;
+                    
+                    // Add to history
+                    state.history.unshift({ date: today, completed: true });
+                    if (state.history.length > 14) {
+                        state.history = state.history.slice(0, 14);
+                    }
+                    
+                    showToast('All 3 complete—streak +1 🔥');
+                    showConfetti();
+                }
+            }
+        }
+
+        // Navigation
+        function showTab(tabName) {
+            // Update nav buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.closest('.nav-tab').classList.add('active');
+            
+            // Show/hide panels
+            document.querySelectorAll('.main-content, .panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+            
+            if (tabName === 'today') {
+                document.getElementById('today-panel').style.display = 'block';
+            } else {
+                document.getElementById(`${tabName}-panel`).style.display = 'block';
+                
+                if (tabName === 'history') {
+                    generateHistory();
+                }
+            }
+        }
+
+        // Generate history grid
+        function generateHistory() {
+            const grid = document.getElementById('history-grid');
+            const empty = document.getElementById('history-empty');
+            
+            if (state.history.length === 0) {
+                grid.style.display = 'none';
+                empty.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            empty.style.display = 'none';
+            
+            // Generate last 14 days
+            const days = [];
+            for (let i = 13; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toDateString();
+                const dayNum = date.getDate();
+                const isToday = i === 0;
+                
+                const historyEntry = state.history.find(h => h.date === dateStr);
+                const completed = historyEntry ? historyEntry.completed : false;
+                
+                days.push(`
+                    <div class="history-day ${completed ? 'history-complete' : 'history-missed'} ${isToday ? 'history-today' : ''}"
+                         title="${dateStr}: ${completed ? 'Complete' : 'Missed'}">
+                        ${dayNum}
+                    </div>
+                `);
+            }
+            
+            grid.innerHTML = days.join('');
+        }
+
+        // Theme management
+        function applyTheme() {
+            const theme = state.theme === 'system' ? 
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
+                state.theme;
+            
+            document.body.setAttribute('data-theme', theme);
+            
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                toggle.classList.toggle('dark', theme === 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const themes = ['light', 'dark', 'system'];
+            const currentIndex = themes.indexOf(state.theme);
+            state.theme = themes[(currentIndex + 1) % themes.length];
+            applyTheme();
+            saveState();
+        }
+
+        // Settings
+        function showSettings() {
+            showTab('profile');
+            // Update nav to show profile as active
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[2].classList.add('active');
+        }
+
+        // Toast notifications
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Confetti animation
+        function showConfetti() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return; // Skip animation for users who prefer reduced motion
+            }
+            
+            const confetti = document.getElementById('confetti');
+            
+            // Create confetti pieces
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.animationDelay = Math.random() * 2 + 's';
+                piece.style.backgroundColor = Math.random() > 0.5 ? '#fc6200' : '#4caf50';
+                confetti.appendChild(piece);
+            }
+            
+            // Clean up after animation
+            setTimeout(() => {
+                confetti.innerHTML = '';
+            }, 3000);
+        }
+
+        // Modal functions
+        function showModal() {
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function resetDemoData() {
+            showModal();
+        }
+
+        function confirmReset() {
+            localStorage.removeItem('888streaks');
+            state = {
+                streakCount: 0,
+                todayStatus: [false, false, false],
+                weekPoints: 0,
+                history: [],
+                lastCompletedDate: null,
+                timerStartTime: null,
+                timerElapsed: 0,
+                timerRunning: false,
+                roundsCount: 8,
+                theme: 'system'
+            };
+            updateUI();
+            generateHistory();
+            closeModal();
+            showToast('Demo data reset successfully');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (state.theme === 'system') {
+                applyTheme();
+            }
+        });
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Handle page visibility for timer persistence
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && state.timerRunning) {
+                saveState();
+            }
+        });
+    </script>
+</body>
+</html>
