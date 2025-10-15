@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>888: Merge Rush - Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background: #d4edda; }
+        .fail { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>888: Merge Rush - Functionality Test</h1>
+    <div id="tests"></div>
+    
+    <script>
+        // Simple test framework
+        function runTests() {
+            const tests = [];
+            
+            // Test 1: Game initialization
+            tests.push({
+                name: "Game Class Initialization",
+                test: () => {
+                    // Load the game script
+                    return new Promise((resolve) => {
+                        const script = document.createElement('script');
+                        script.src = 'game.js';
+                        script.onload = () => {
+                            try {
+                                const game = new Game();
+                                resolve(game !== null && typeof game.board !== 'undefined');
+                            } catch (e) {
+                                resolve(false);
+                            }
+                        };
+                        document.head.appendChild(script);
+                    });
+                }
+            });
+            
+            // Test 2: Board structure
+            tests.push({
+                name: "8x8 Board Structure",
+                test: () => {
+                    const game = new Game();
+                    return game.board.length === 8 && game.board[0].length === 8;
+                }
+            });
+            
+            // Test 3: Tile merging logic
+            tests.push({
+                name: "Tile Merging Logic",
+                test: () => {
+                    const game = new Game();
+                    const tile1 = { value: 2, state: 'normal' };
+                    const tile2 = { value: 2, state: 'normal' };
+                    return game.canMerge(tile1, tile2);
+                }
+            });
+            
+            // Test 4: Special merging (8+8=88)
+            tests.push({
+                name: "Special Merging (8+8=88)",
+                test: () => {
+                    const game = new Game();
+                    const tile1 = { value: 8, state: 'normal' };
+                    const tile2 = { value: 8, state: 'normal' };
+                    return game.canMerge(tile1, tile2);
+                }
+            });
+            
+            // Test 5: Stone tiles blocking
+            tests.push({
+                name: "Stone Tiles Blocking",
+                test: () => {
+                    const game = new Game();
+                    const tile1 = { value: 2, state: 'stone' };
+                    const tile2 = { value: 2, state: 'normal' };
+                    return !game.canMerge(tile1, tile2);
+                }
+            });
+            
+            return Promise.all(tests.map(async (test) => {
+                try {
+                    const result = await test.test();
+                    return { name: test.name, passed: result };
+                } catch (e) {
+                    return { name: test.name, passed: false, error: e.message };
+                }
+            }));
+        }
+        
+        // Run tests and display results
+        runTests().then(results => {
+            const testsDiv = document.getElementById('tests');
+            results.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test ${result.passed ? 'pass' : 'fail'}`;
+                div.innerHTML = `
+                    <strong>${result.name}</strong>: ${result.passed ? 'PASS' : 'FAIL'}
+                    ${result.error ? `<br>Error: ${result.error}` : ''}
+                `;
+                testsDiv.appendChild(div);
+            });
+        });
+    </script>
+</body>
+</html>
