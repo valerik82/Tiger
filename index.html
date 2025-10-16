@@ -2,185 +2,244 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Hollywood Crazy Wheel</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FFD700">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>888: Merge Rush</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-        <!-- Loading Screen -->
-        <div id="loading-screen" class="screen active">
-            <div class="loading-content">
-                <h1 class="game-title">HOLLYWOOD<br>CRAZY WHEEL</h1>
-                <div class="loading-spinner"></div>
-                <p>Loading your studio...</p>
+    <div class="game-container">
+        <!-- Home Screen -->
+        <div class="screen home-screen active">
+            <div class="logo">
+                <div class="logo-text">888</div>
+                <div class="logo-subtitle">MERGE RUSH</div>
             </div>
-        </div>
-
-        <!-- Main Menu -->
-        <div id="main-menu" class="screen">
-            <div class="menu-header">
-                <h1 class="game-title">HOLLYWOOD<br>CRAZY WHEEL</h1>
-                <div class="subtitle">Lights, Camera, Action!</div>
-            </div>
+            
             <div class="menu-buttons">
-                <button id="play-btn" class="menu-btn primary">PLAY</button>
-                <button id="daily-btn" class="menu-btn">DAILY PREMIERE</button>
-                <button id="endless-btn" class="menu-btn">AFTER PARTY</button>
-                <button id="collection-btn" class="menu-btn">MOVIE COLLECTION</button>
+                <button class="btn-primary" data-mode="classic">
+                    <span class="btn-icon">♾️</span>
+                    <span>Classic</span>
+                </button>
+                <button class="btn-primary" data-mode="timeattack">
+                    <span class="btn-icon">⏱️</span>
+                    <span>Time Attack (88s)</span>
+                </button>
+                <button class="btn-primary" data-mode="daily8">
+                    <span class="btn-icon">📅</span>
+                    <span>Daily 8</span>
+                </button>
             </div>
-            <div class="currency-display">
-                <div class="currency-item">
-                    <span class="currency-icon">🎟️</span>
-                    <span id="tickets-count">0</span>
-                </div>
-                <div class="currency-item">
-                    <span class="currency-icon">⭐</span>
-                    <span id="stars-count">0</span>
-                </div>
+            
+            <div class="home-footer">
+                <button class="btn-secondary" id="quests-btn">
+                    <span class="quest-badge" data-count="0">!</span>
+                    Quests
+                </button>
+                <button class="btn-secondary" id="settings-btn">⚙️ Settings</button>
+                <button class="btn-secondary" id="leaderboard-btn">🏆 Leaderboard</button>
+            </div>
+            
+            <div class="daily-streak-indicator" id="daily-streak">
+                <span class="streak-icon">🔥</span>
+                <span class="streak-count">0</span>
             </div>
         </div>
 
         <!-- Game Screen -->
-        <div id="game-screen" class="screen">
-            <!-- HUD -->
-            <div id="game-hud">
-                <div class="hud-top">
-                    <div class="level-info">
-                        <span id="level-number">Level 1</span>
-                        <span id="level-objective">Score 1000</span>
+        <div class="screen game-screen">
+            <div class="game-header">
+                <div class="score-container">
+                    <div class="score-label">SCORE</div>
+                    <div class="score-value" id="score">0</div>
+                    <div class="combo-multiplier" id="combo-multiplier">×1</div>
+                </div>
+                
+                <div class="combo-timer-container">
+                    <div class="combo-label">COMBO</div>
+                    <div class="combo-timer-bar">
+                        <div class="combo-timer-fill" id="combo-timer"></div>
                     </div>
-                    <div class="game-stats">
-                        <div class="stat">
-                            <span class="stat-label">Score</span>
-                            <span id="current-score">0</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-label">Moves</span>
-                            <span id="moves-left">20</span>
-                        </div>
-                        <div class="stat" id="timer-stat" style="display: none;">
-                            <span class="stat-label">Time</span>
-                            <span id="time-left">60</span>
-                        </div>
+                    <div class="combo-seconds" id="combo-seconds">8.0s</div>
+                </div>
+                
+                <div class="game-info">
+                    <div class="next-tile-preview">
+                        <div class="preview-label">NEXT</div>
+                        <div class="preview-tile" id="next-tile">1</div>
+                    </div>
+                    <button class="btn-pause" id="pause-btn">⏸️</button>
+                </div>
+            </div>
+            
+            <div class="board-wrapper">
+                <div class="game-board" id="game-board">
+                    <!-- 8x8 grid will be generated here -->
+                </div>
+                <canvas class="effects-canvas" id="effects-canvas"></canvas>
+            </div>
+            
+            <div class="boosters-container">
+                <button class="booster-btn" data-booster="flip8" data-count="3">
+                    <span class="booster-icon">🔄</span>
+                    <span class="booster-name">Flip 8</span>
+                    <span class="booster-count">3</span>
+                </button>
+                <button class="booster-btn" data-booster="split" data-count="3">
+                    <span class="booster-icon">✂️</span>
+                    <span class="booster-name">Split</span>
+                    <span class="booster-count">3</span>
+                </button>
+                <button class="booster-btn" data-booster="shockwave" data-count="3">
+                    <span class="booster-icon">💥</span>
+                    <span class="booster-name">Shock</span>
+                    <span class="booster-count">3</span>
+                </button>
+            </div>
+            
+            <div class="mode-indicator" id="mode-indicator">
+                <span class="mode-name">Classic</span>
+                <span class="mode-timer" id="mode-timer"></span>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="screen game-over-screen">
+            <div class="game-over-content">
+                <h2 class="game-over-title">GAME OVER</h2>
+                
+                <div class="final-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Final Score</span>
+                        <span class="stat-value" id="final-score">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Best Score</span>
+                        <span class="stat-value" id="best-score">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Highest Tile</span>
+                        <span class="stat-value" id="highest-tile">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">888 Blasts</span>
+                        <span class="stat-value" id="blast-count">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Merges</span>
+                        <span class="stat-value" id="merge-count">0</span>
                     </div>
                 </div>
                 
-                <!-- Crazy Wheel -->
-                <div id="crazy-wheel-container">
-                    <canvas id="crazy-wheel" width="200" height="200"></canvas>
-                    <div id="wheel-pointer"></div>
-                    <button id="spin-wheel-btn" class="spin-btn" disabled>SPIN</button>
+                <div class="game-over-buttons">
+                    <button class="btn-primary" id="retry-btn">
+                        <span class="btn-icon">🔄</span>
+                        Retry
+                    </button>
+                    <button class="btn-primary" id="share-btn">
+                        <span class="btn-icon">📤</span>
+                        Share
+                    </button>
+                    <button class="btn-secondary" id="home-btn">
+                        <span class="btn-icon">🏠</span>
+                        Home
+                    </button>
                 </div>
-            </div>
-
-            <!-- Game Board -->
-            <div id="game-board-container">
-                <canvas id="game-board" width="350" height="450"></canvas>
-                <div id="chain-overlay"></div>
-            </div>
-
-            <!-- Power-ups Bar -->
-            <div id="powerups-bar">
-                <button class="powerup-btn" id="directors-cut" data-powerup="directors-cut">
-                    <span class="powerup-icon">🎬</span>
-                    <span class="powerup-count">0</span>
-                </button>
-                <button class="powerup-btn" id="clapboard-smash" data-powerup="clapboard-smash">
-                    <span class="powerup-icon">🎬</span>
-                    <span class="powerup-count">0</span>
-                </button>
-                <button class="powerup-btn" id="spotlight-beam" data-powerup="spotlight-beam">
-                    <span class="powerup-icon">💡</span>
-                    <span class="powerup-count">0</span>
-                </button>
-                <button class="powerup-btn" id="re-shoot" data-powerup="re-shoot">
-                    <span class="powerup-icon">🔄</span>
-                    <span class="powerup-count">0</span>
-                </button>
-            </div>
-
-            <!-- Pause/Menu Button -->
-            <button id="pause-btn" class="icon-btn">⏸️</button>
-        </div>
-
-        <!-- Mini-game Screen -->
-        <div id="minigame-screen" class="screen">
-            <div id="minigame-container">
-                <h2 id="minigame-title">Red Carpet Runner</h2>
-                <canvas id="minigame-canvas" width="350" height="300"></canvas>
-                <div id="minigame-instructions">Swipe to dodge paparazzi and grab stars!</div>
-                <div id="minigame-timer">10</div>
             </div>
         </div>
 
-        <!-- Level Complete Screen -->
-        <div id="level-complete" class="screen">
-            <div class="complete-content">
-                <h2>Scene Complete!</h2>
-                <div class="stars-earned">
-                    <div class="star">⭐</div>
-                    <div class="star">⭐</div>
-                    <div class="star">⭐</div>
+        <!-- Settings Modal -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button class="close-btn">&times;</button>
                 </div>
-                <div class="rewards">
-                    <div class="reward-item">
-                        <span class="reward-icon">🎟️</span>
-                        <span id="tickets-earned">+50</span>
+                <div class="modal-body">
+                    <div class="setting-row">
+                        <label>Sound Effects</label>
+                        <input type="checkbox" id="sfx-toggle" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label>Music</label>
+                        <input type="checkbox" id="music-toggle" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label>Vibration</label>
+                        <input type="checkbox" id="vibration-toggle" checked>
+                    </div>
+                    <div class="setting-row">
+                        <label>High Contrast</label>
+                        <input type="checkbox" id="contrast-toggle">
+                    </div>
+                    <div class="setting-row">
+                        <label>Reduced Motion</label>
+                        <input type="checkbox" id="motion-toggle">
+                    </div>
+                    <div class="setting-row">
+                        <button class="btn-secondary" id="reset-data">Reset Progress</button>
                     </div>
                 </div>
-                <div class="level-complete-buttons">
-                    <button id="next-level-btn" class="menu-btn primary">NEXT SCENE</button>
-                    <button id="replay-level-btn" class="menu-btn">REPLAY</button>
-                    <button id="main-menu-btn" class="menu-btn">MAIN MENU</button>
+            </div>
+        </div>
+
+        <!-- Quests Modal -->
+        <div class="modal" id="quests-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Daily Quests</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="quest-list" id="quest-list">
+                        <!-- Quests will be dynamically generated -->
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Movie Collection Screen -->
-        <div id="collection-screen" class="screen">
-            <div class="collection-header">
-                <h2>Movie Collection</h2>
-                <button id="collection-back-btn" class="back-btn">← Back</button>
-            </div>
-            <div id="movies-grid">
-                <!-- Movies will be populated by JavaScript -->
+        <!-- Leaderboard Modal -->
+        <div class="modal" id="leaderboard-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Leaderboard</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="leaderboard-tabs">
+                        <button class="tab-btn active" data-tab="classic">Classic</button>
+                        <button class="tab-btn" data-tab="timeattack">Time Attack</button>
+                        <button class="tab-btn" data-tab="daily8">Daily 8</button>
+                    </div>
+                    <div class="leaderboard-content" id="leaderboard-content">
+                        <!-- Leaderboard entries will be dynamically generated -->
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Pause Menu -->
-        <div id="pause-menu" class="overlay">
-            <div class="pause-content">
-                <h3>Game Paused</h3>
-                <button id="resume-btn" class="menu-btn primary">RESUME</button>
-                <button id="restart-btn" class="menu-btn">RESTART LEVEL</button>
-                <button id="quit-btn" class="menu-btn">MAIN MENU</button>
+        <div class="modal" id="pause-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>PAUSED</h3>
+                </div>
+                <div class="modal-body">
+                    <button class="btn-primary" id="resume-btn">Resume</button>
+                    <button class="btn-secondary" id="restart-btn">Restart</button>
+                    <button class="btn-secondary" id="quit-btn">Quit to Menu</button>
+                </div>
             </div>
         </div>
 
-        <!-- Wheel Result Popup -->
-        <div id="wheel-result" class="overlay">
-            <div class="wheel-result-content">
-                <h3 id="wheel-result-title">Double Score!</h3>
-                <div id="wheel-result-description">Your next chain will score double points!</div>
-                <button id="wheel-result-ok" class="menu-btn primary">ACTION!</button>
-            </div>
+        <!-- Booster Selection Overlay -->
+        <div class="booster-overlay" id="booster-overlay">
+            <div class="booster-message">Select target for <span id="booster-name"></span></div>
+            <button class="btn-cancel" id="cancel-booster">Cancel</button>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/board.js"></script>
-    <script src="js/wheel.js"></script>
-    <script src="js/minigames.js"></script>
-    <script src="js/powerups.js"></script>
-    <script src="js/levels.js"></script>
-    <script src="js/economy.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/main.js"></script>
+    <script src="game.js"></script>
 </body>
 </html>
